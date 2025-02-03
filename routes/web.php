@@ -8,3 +8,8 @@ Route::get('/', function () {
     ]);
 });
 
+Route::get('/tentang-kami', function () {
+    return view('about.about', [
+        'title' => 'Tentang Kami'
+    ]);
+});
