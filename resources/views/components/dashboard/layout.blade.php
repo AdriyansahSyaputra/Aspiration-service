@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ $title }}</title>
+    <title>Dashboard</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -19,17 +19,23 @@
         href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
         rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 
-<body class="bg-gray-100 font-inter">
+<body class="bg-blue-50 min-h-screen flex font-inter">
 
-    <x-users.navbar />
+    <x-dashboard.sidebar />
+    <div class="flex-1">
+        <x-dashboard.header />
 
-    <main class="container">
-        {{ $slot }}
-    </main>
+        <main class="container p-6">
+            {{ $slot }}
+        </main>
+    </div>
 
-    <x-users.footer />
+
+
 </body>
 
 </html>

@@ -13,3 +13,15 @@ Route::get('/tentang-kami', function () {
         'title' => 'Tentang Kami'
     ]);
 });
+
+Route::get('/login', function () {
+    return view('auth.login');
+});
+
+Route::get('/register', function () {
+    return view('auth.register');
+});
+
+Route::get('dashboard', function () {
+    return view('dashboards.dashboard');
+});
