@@ -25,3 +25,11 @@ Route::get('/register', function () {
 Route::get('dashboard', function () {
     return view('dashboards.dashboard');
 });
+
+Route::get('/dashboard/reports', function () {
+    return view('dashboards.report');
+});
+
+Route::get('/dashboard/users', function () {
+    return view('dashboards.users');
+});

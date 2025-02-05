@@ -14,21 +14,21 @@
             
             <nav class="space-y-2">
                 <!-- Dashboard -->
-                <a href="#" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
+                <a href="/dashboard" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
                     <i class="fa-solid fa-gauge-high w-5 h-5"></i>
                     <span class="ml-3">Dashboard</span>
                     <i class="fa-solid fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </a>
 
                 <!-- Laporan -->
-                <a href="#" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
+                <a href="/dashboard/reports" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
                     <i class="fa-solid fa-file-lines w-5 h-5"></i>
                     <span class="ml-3">Laporan</span>
                     <i class="fa-solid fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
                 </a>
 
                 <!-- Users -->
-                <a href="#" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
+                <a href="/dashboard/users" class="group flex items-center px-4 py-3 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-all duration-200">
                     <i class="fa-solid fa-users w-5 h-5"></i>
                     <span class="ml-3">Users</span>
                     <i class="fa-solid fa-chevron-right ml-auto opacity-0 group-hover:opacity-100 transition-opacity"></i>
