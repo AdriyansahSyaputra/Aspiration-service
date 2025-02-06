@@ -26,7 +26,7 @@
 <body class="bg-blue-50 min-h-screen flex font-inter">
 
     <x-dashboard.sidebar />
-    <div class="flex-1">
+    <div class="flex-1 ml-64">
         <x-dashboard.header />
 
         <main class="container p-6">

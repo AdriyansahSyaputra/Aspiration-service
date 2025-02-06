@@ -27,9 +27,17 @@ Route::get('dashboard', function () {
 });
 
 Route::get('/dashboard/reports', function () {
-    return view('dashboards.report');
+    return view('dashboards.reports.report');
+});
+
+Route::get('/dashboard/report-detail', function () {
+    return view('dashboards.reports.report-detail');
 });
 
 Route::get('/dashboard/users', function () {
-    return view('dashboards.users');
+    return view('dashboards.users.users');
+});
+
+Route::get('/dashboard/user-report', function () {
+    return view('dashboards.users.user-report');
 });

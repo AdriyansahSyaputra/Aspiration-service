@@ -1,4 +1,4 @@
-<aside class="bg-slate-800 w-64 min-h-screen flex flex-col">
+<aside class="bg-slate-800 w-64 min-h-screen fixed flex flex-col">
     <!-- Logo Section -->
     <div class="p-6 border-b border-slate-700">
         <h1 class="text-2xl font-semibold text-center">

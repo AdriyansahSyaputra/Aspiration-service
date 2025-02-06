@@ -71,6 +71,7 @@
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama User</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Judul</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Instansi</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
@@ -79,11 +80,12 @@
                     <tbody class="divide-y divide-gray-200">
                         <!-- Sample Data -->
                         <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">1</td>
-                            <td class="px-6 py-4 font-medium">LP-001</td>
-                            <td class="px-6 py-4">John Doe</td>
-                            <td class="px-6 py-4">Permasalahan jaringan</td>
-                            <td class="px-6 py-4">2023-08-15</td>
+                            <td class="px-6 py-4 text-sm">1</td>
+                            <td class="px-6 py-4 font-medium text-sm">LP-001</td>
+                            <td class="px-6 py-4 text-sm">John Doe</td>
+                            <td class="px-6 py-4 text-sm">Permasalahan jaringan</td>
+                            <td class="px-6 py-4 uppercase text-sm">Komdigi</td>
+                            <td class="px-6 py-4 text-sm">2023-08-15</td>
                             <td class="px-6 py-4">
                                 <span class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800">Selesai</span>
                             </td>
