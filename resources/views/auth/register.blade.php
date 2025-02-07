@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>Registrasi</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -23,19 +23,26 @@
             <p class="text-gray-600 mt-2">Buat akun anda sekarang!</p>
         </div>
 
-        <form action="" class="space-y-6">
+        <form action="{{ route('register.store') }}" method="POST" class="space-y-6">
+            @csrf
             {{-- Nama Lengkap --}}
             <div class="relative">
                 <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                <input type="text" id="fullName" name="fullName" placeholder="Masukkan Nama Lengkap anda"
+                <input type="text" id="fullName" name="fullName" value="{{ old('fullName') }}" placeholder="Masukkan Nama Lengkap anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                @error('fullName')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Email --}}
             <div class="relative">
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="email" name="email" placeholder="Masukkan email anda"
+                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                @error('email')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Password --}}
@@ -43,6 +50,9 @@
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
                 <input type="password" id="password" name="password" placeholder="Masukkan password anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                @error('password')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
                 <button type="button" onclick="togglePassword()"
                     class="absolute right-3 top-10 text-gray-500 hover:text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -57,9 +67,15 @@
 
             {{-- Confirm Password --}}
             <div class="relative">
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Masukkan password anda"
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                    Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation"
+                    placeholder="Masukkan password anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+
+                @error('password_confirmation')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
                 <button type="button" onclick="toggleConfirmPassword()"
                     class="absolute right-3 top-10 text-gray-500 hover:text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -91,7 +107,7 @@
         }
 
         function toggleConfirmPassword() {
-            const passwordInput = document.getElementById('confirmPassword');
+            const passwordInput = document.getElementById('password_confirmation');
             const type = passwordInput.type === 'password' ? 'text' : 'password';
             passwordInput.type = type;
         }

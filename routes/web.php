@@ -1,29 +1,15 @@
 <?php
 
+use App\Http\Controllers\AspirationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
 
-Route::get('/', function () {
-    return view('home.home', [
-        'title' => 'Home'
-    ]);
-});
 
 Route::get('/tentang-kami', function () {
     return view('about.about', [
         'title' => 'Tentang Kami'
     ]);
-});
-
-Route::get('/login', function () {
-    return view('auth.login');
-});
-
-Route::get('/register', function () {
-    return view('auth.register');
-});
-
-Route::get('dashboard', function () {
-    return view('dashboards.dashboard');
 });
 
 Route::get('/dashboard/reports', function () {
@@ -40,4 +26,24 @@ Route::get('/dashboard/users', function () {
 
 Route::get('/dashboard/user-report', function () {
     return view('dashboards.users.user-report');
+});
+
+Route::controller(RegisterController::class)->group(function () {
+    Route::get('/register', 'index')->name('register.index');
+    Route::post('/register', 'store')->name('register.store');
+});
+
+Route::controller(LoginController::class)->group(function () {
+    Route::get('/login', 'index')->name('login');
+    Route::post('/login', 'login')->name('login.login');
+    Route::post('/logout', 'logout')->name('logout');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboards.dashboard');
+})->name('dashboard');
+
+Route::controller(AspirationController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+    Route::post('/', 'store')->name('aspiration.store');
 });

@@ -23,7 +23,8 @@
             <p class="text-gray-600 mt-2">Masuk ke akun anda</p>
         </div>
 
-        <form action="" class="space-y-6">
+        <form action="{{ route('login.login') }}" method="POST" class="space-y-6">
+            @csrf
             <div class="relative">
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                 <input type="email" id="email" name="email" placeholder="Masukkan email anda"
@@ -46,6 +47,10 @@
                 </button>
             </div>
 
+            @session('error')
+                <p class="text-red-500 text-sm">{{ session('error') }}</p>
+            @endsession
+
             <div class="flex items-center justify-between">
                 <div class="flex items-center">
                     <input type="checkbox" id="remember" name="remember" class="mr-2">
@@ -56,6 +61,8 @@
                     <a href="#" class="text-sm text-blue-500 hover:underline">Lupa Password?</a>
                 </div>
             </div>
+
+
 
             <button type="submit"
                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-md shadow-md focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Login</button>

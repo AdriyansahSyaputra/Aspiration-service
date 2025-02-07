@@ -59,22 +59,27 @@
                     Anda. Kami akan memastikan pengaduan Anda ditindaklanjuti oleh instansi terkait.</p>
             </div>
             <div class="mt-12 max-w-2xl mx-auto">
-                <form id="complaintForm" class="bg-white p-8 rounded-lg shadow-lg">
+                <form action="{{ route('aspiration.store') }}" method="POST" id="complaintForm" enctype="multipart/form-data"
+                    class="bg-white p-8 rounded-lg shadow-lg">
+                    @csrf
                     <!-- Judul Pengaduan -->
                     <div class="mb-6">
                         <label for="judul" class="block text-gray-700 font-semibold mb-2">Judul Pengaduan</label>
-                        <input type="text" id="judul"
+                        <input type="text" id="judul" name="title" value="{{ old('title') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             placeholder="Masukkan judul pengaduan" required>
+                        @error('title')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Instansi Tujuan -->
                     <div class="mb-6">
                         <label for="instansi" class="block text-gray-700 font-semibold mb-2">Instansi Tujuan</label>
-                        <select id="instansi"
+                        <select id="instansi" name="institution"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             required>
-                            <option value="" disabled selected>Pilih Instansi</option>
+                            <option value="{{ old('institution') }}" disabled selected>Pilih Instansi</option>
                             <option value="Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi">Kementerian
                                 Pendidikan, Kebudayaan, Riset, dan Teknologi</option>
                             <option value="Kementerian Kesehatan">Kementerian Kesehatan</option>
@@ -89,30 +94,41 @@
                     <div class="mb-6">
                         <label for="deskripsi" class="block text-gray-700 font-semibold mb-2">Deskripsi
                             Pengaduan</label>
-                        <textarea id="deskripsi" rows="5"
+                        <textarea id="deskripsi" rows="5" name="aspiration" value="{{ old('aspiration') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             placeholder="Jelaskan pengaduan Anda secara detail" required></textarea>
+                        @error('aspiration')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Tanggal Kejadian -->
                     <div class="mb-6">
-                        <label for="tanggal" class="block text-gray-700 font-semibold mb-2">Tanggal Kejadian</label>
-                        <input type="date" id="tanggal"
+                        <label for="date_occurred" class="block text-gray-700 font-semibold mb-2">Tanggal
+                            Kejadian</label>
+                        <input type="date" id="date_occurred" name="date_occurred" value="{{ old('date_occurred') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             required>
+                        @error('date_occurred')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Lokasi -->
                     <div class="mb-6">
-                        <label for="lokasi" class="block text-gray-700 font-semibold mb-2">Lokasi Kejadian</label>
-                        <input type="text" id="lokasi"
+                        <label for="location" class="block text-gray-700 font-semibold mb-2">Lokasi Kejadian</label>
+                        <input type="text" id="location" name="location" value="{{ old('location') }}"
                             class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                             placeholder="Masukkan lokasi kejadian" required>
+                        @error('location')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Bukti Pengaduan -->
                     <div class="mb-6">
-                        <label for="bukti" class="block text-gray-700 font-semibold mb-2">Bukti Pengaduan</label>
+                        <label for="bukti" class="block text-gray-700 font-semibold mb-2">Bukti Pengaduan <span
+                                class="text-gray-500 font-light">(opsional)</span></label>
                         <div class="flex items-center justify-center w-full">
                             <label for="bukti"
                                 class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition duration-300">
@@ -121,9 +137,12 @@
                                     <p class="text-sm text-gray-500">Unggah file (foto atau PDF)</p>
                                 </div>
                                 <input type="file" id="bukti" class="hidden" accept="image/*, application/pdf"
-                                    required>
+                                    name="attachment">
                             </label>
                         </div>
+                        @error('attachment')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Tombol Kirim -->
@@ -132,6 +151,14 @@
                         <i class="fas fa-paper-plane mr-2"></i>Kirim Pengaduan
                     </button>
                 </form>
+
+                @session('success')
+                    <script>
+                        const successMessage = document.getElementById('successMessage');
+                        successMessage.classList.remove('hidden');
+                    </script>
+                @endsession
+
                 <div id="successMessage" class="hidden mt-6 p-4 bg-green-100 text-green-700 rounded-lg text-center">
                     Pengaduan Anda telah berhasil dikirim!
                 </div>
