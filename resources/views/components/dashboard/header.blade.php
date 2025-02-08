@@ -25,12 +25,15 @@
         </a>
 
         {{-- User section --}}
+        @if (Auth::check())
         <div class="flex items-center">
-            <img src="/img/user/default.jpg" alt="User Image" class="w-8 h-8 rounded-full">
-            <div class="ml-2">
-                <p class="text-sm font-semibold text-gray-700">Admin</p>
+            <img src="/img/user/default.jpg" alt="{{ Auth::user()->name }}" class="w-8 h-8 rounded-full">
+            <div class="ml-2 flex flex-col">
+                <p class="text-sm font-semibold text-gray-700">{{ Auth::user()->name }}</p>
+                <span class="text-xs text-gray-600">{{ Auth::user()->email }}</span>
             </div>
         </div>
+        @endif
 
     </div>
 

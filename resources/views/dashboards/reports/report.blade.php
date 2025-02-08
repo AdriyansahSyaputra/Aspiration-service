@@ -26,7 +26,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">Total Laporan</p>
-                        <p class="text-2xl font-bold">124</p>
+                        <p class="text-2xl font-bold">{{ $reports->count() }}</p>
                     </div>
                     <i class="fas fa-file-alt text-3xl text-blue-500"></i>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">Selesai</p>
-                        <p class="text-2xl font-bold">89</p>
+                        <p class="text-2xl font-bold">{{ $reports->where('status', 'selesai')->count() }}</p>
                     </div>
                     <i class="fas fa-check-circle text-3xl text-green-500"></i>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">Proses</p>
-                        <p class="text-2xl font-bold">77</p>
+                        <p class="text-2xl font-bold">{{ $reports->where('status', 'proses')->count() }}</p>
                     </div>
                     <i class="fas fa-arrows-spin text-3xl text-green-500"></i>
                 </div>
@@ -53,7 +53,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-gray-500">Pending</p>
-                        <p class="text-2xl font-bold">15</p>
+                        <p class="text-2xl font-bold">{{ $reports->where('status', 'pending')->count() }}</p>
                     </div>
                     <i class="fas fa-clock text-3xl text-yellow-500"></i>
                 </div>
@@ -79,32 +79,51 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200">
                         <!-- Sample Data -->
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 text-sm">1</td>
-                            <td class="px-6 py-4 font-medium text-sm">LP-001</td>
-                            <td class="px-6 py-4 text-sm">John Doe</td>
-                            <td class="px-6 py-4 text-sm">Permasalahan jaringan</td>
-                            <td class="px-6 py-4 uppercase text-sm">Komdigi</td>
-                            <td class="px-6 py-4 text-sm">2023-08-15</td>
-                            <td class="px-6 py-4">
-                                <span class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800">Selesai</span>
-                            </td>
-                            <td class="px-6 py-4 relative">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v text-gray-500 hover:text-blue-500"></i>
-                                </button>
-                                <div
-                                    class="action-menu hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-20">
-                                    <button class="w-full px-4 py-2 text-left hover:bg-gray-100">
-                                        <i class="fas fa-eye mr-2 text-blue-500"></i>Lihat Detail
+                        @foreach ($reports as $report)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 text-sm">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4 font-medium text-sm">{{ $report->id }}</td>
+                                <td class="px-6 py-4 text-sm">{{ $report->user->name }}</td>
+                                <td class="px-6 py-4 text-sm">{{ $report->title }}</td>
+                                <td class="px-6 py-4 uppercase text-sm">{{ $report->institution }}</td>
+                                <td class="px-6 py-4 text-sm">{{ $report->date_occurred }}</td>
+                                <td class="px-6 py-4">
+                                    @if ($report->status === 'pending')
+                                        <span
+                                            class="px-2 py-1 text-sm rounded-full bg-red-100 text-red-800">Pending</span>
+                                    @elseif($report->status === 'proses')
+                                        <span
+                                            class="px-2 py-1 text-sm rounded-full bg-yellow-100 text-yellow-800">Proses</span>
+                                    @else
+                                        <span
+                                            class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800">Selesai</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 relative">
+                                    <button class="action-btn">
+                                        <i class="fas fa-ellipsis-v text-gray-500 hover:text-blue-500"></i>
                                     </button>
-                                    <button class="w-full px-4 py-2 text-left hover:bg-gray-100">
-                                        <i class="fas fa-trash mr-2 text-red-500"></i>Hapus
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <!-- Add more rows as needed -->
+                                    <div
+                                        class="action-menu hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-20">
+                                        <a href="{{ route('reports.show', $report->slug) }}"
+                                            class="w-full block px-4 py-2 text-left hover:bg-gray-100">
+                                            <i class="fas fa-eye mr-2 text-blue-500"></i>Lihat Detail
+                                        </a>
+
+                                        <form action="{{ route('report.destroy', $report->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button class="w-full px-4 py-2 text-left hover:bg-gray-100">
+                                                <i class="fas fa-trash mr-2 text-red-500"></i>Hapus
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+
                     </tbody>
                 </table>
             </div>

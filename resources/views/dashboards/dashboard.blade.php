@@ -92,33 +92,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Baris 1 -->
+                        @foreach ($reports as $report)
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">1</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">#12345</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">John Doe</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">Permasalahan Jalan Rusak</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">2023-10-01</td>
-                            <td class="py-2 px-4 border-b text-sm text-green-600 font-semibold">Selesai</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">{{ $loop->iteration }}</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">{{ $report->id }}</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">{{ $report->user->name }}</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">{{ $report->title }}</td>
+                            <td class="py-2 px-4 border-b text-sm text-gray-700">{{ $report->date_occurred }}</td>
+                            <td class="py-2 px-4 border-b">
+                                @if($report->status === 'selesai')
+                                <span class="text-green-600 text-sm font-semibold">Selesai</span>
+                                @elseif($report->status === 'proses')
+                                <span class="text-yellow-600 text-sm font-semibold">Proses</span>
+                                @else
+                                <span class="text-red-600 text-sm font-semibold">Pending</span>
+                                @endif
+                            </td>
                         </tr>
-                        <!-- Baris 2 -->
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">2</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">#12346</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">Jane Smith</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">Permohonan Perbaikan Lampu Jalan</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">2023-10-02</td>
-                            <td class="py-2 px-4 border-b text-sm text-yellow-600 font-semibold">Proses</td>
-                        </tr>
-                        <!-- Baris 3 -->
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">3</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">#12347</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">Alice Johnson</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">Laporan Banjir</td>
-                            <td class="py-2 px-4 border-b text-sm text-gray-700">2023-10-03</td>
-                            <td class="py-2 px-4 border-b text-sm text-red-600 font-semibold">Pending</td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

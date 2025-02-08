@@ -46,10 +46,12 @@ class AspirationController extends Controller
         Aspiration::create([
             'id' => $customId,
             'title' => $validate['title'],
+            'slug' => Aspiration::generateUniqueSlug($validate['title']),
             'institution' => $validate['institution'],
             'aspiration' => $validate['aspiration'],
             'date_occurred' => $validate['date_occurred'],
             'location' => $validate['location'],
+            'status' => 'pending',
             'attachment' => $attachmentPath,
             'user_id' => Auth::user()->id
         ]);

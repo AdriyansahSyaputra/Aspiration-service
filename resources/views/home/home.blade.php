@@ -59,8 +59,8 @@
                     Anda. Kami akan memastikan pengaduan Anda ditindaklanjuti oleh instansi terkait.</p>
             </div>
             <div class="mt-12 max-w-2xl mx-auto">
-                <form action="{{ route('aspiration.store') }}" method="POST" id="complaintForm" enctype="multipart/form-data"
-                    class="bg-white p-8 rounded-lg shadow-lg">
+                <form action="{{ route('aspiration.store') }}" method="POST" id="complaintForm"
+                    enctype="multipart/form-data" class="bg-white p-8 rounded-lg shadow-lg">
                     @csrf
                     <!-- Judul Pengaduan -->
                     <div class="mb-6">
@@ -136,8 +136,8 @@
                                     <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
                                     <p class="text-sm text-gray-500">Unggah file (foto atau PDF)</p>
                                 </div>
-                                <input type="file" id="bukti" class="hidden" accept="image/*, application/pdf"
-                                    name="attachment">
+                                <input type="file" id="bukti" class="hidden"
+                                    accept="image/*, application/pdf" name="attachment">
                             </label>
                         </div>
                         @error('attachment')

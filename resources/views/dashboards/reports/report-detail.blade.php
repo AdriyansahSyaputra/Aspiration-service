@@ -2,6 +2,7 @@
 
     <div class="container mx-auto p-4 md:p-8 max-w-4xl">
         <!-- Card Utama -->
+
         <div class="bg-white rounded-xl shadow-lg p-6 md:p-8">
             <!-- Header -->
             <div class="flex justify-between items-center mb-8">
@@ -18,38 +19,42 @@
             <!-- Grid Informasi -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <div>
+                    <label class="block text-sm font-medium text-gray-500 mb-1">Judul</label>
+                    <p class="text-lg font-semibold text-gray-800">{{ $report->title }}</p>
+                </div>
+                <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Kode Laporan</label>
-                    <p class="text-lg font-semibold text-gray-800">#LP20231012</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ $report->id }}</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Tanggal</label>
-                    <p class="text-lg font-semibold text-gray-800">12 Oktober 2023</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ $report->date_occurred }}</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Nama Pelapor</label>
-                    <p class="text-lg font-semibold text-gray-800">John Doe</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ $report->user->name }}</p>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-1">Instansi</label>
-                    <p class="text-lg font-semibold text-gray-800">Dinas PUPR</p>
+                    <p class="text-lg font-semibold text-gray-800">{{ $report->institution }}</p>
                 </div>
-            </div>
 
-            <!-- Status Section -->
-            <div class="mb-8">
-                <label class="block text-sm font-medium text-gray-500 mb-2">Status Laporan</label>
-                <div class="relative inline-block">
-                    <button id="statusButton" onclick="toggleStatusDropdown()"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
-                        <span class="status-dot animate-pulse"></span>
-                        <span id="statusText" class="font-semibold">Proses</span>
-                        <i class="fas fa-chevron-down text-sm"></i>
-                    </button>
+                <!-- Status Section -->
+                <div class="mb-8">
+                    <label class="block text-sm font-medium text-gray-500 mb-2">Status Laporan</label>
+                    <div class="relative inline-block">
+                        <button id="statusButton" onclick="toggleStatusDropdown()"
+                            class="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors">
+                            <span class="status-dot animate-pulse"></span>
+                            <span id="statusText" class="font-semibold">{{ $report->status }}</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </button>
 
-                    <!-- Dropdown Status -->
-                    <div id="statusDropdown"
-                        class="hidden absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10">
-                        <!-- Options akan diisi oleh JavaScript -->
+                        <!-- Dropdown Status -->
+                        <div id="statusDropdown"
+                            class="hidden absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-2 z-10">
+                            <!-- Options akan diisi oleh JavaScript -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -59,9 +64,7 @@
                 <label class="block text-sm font-medium text-gray-500 mb-2">Deskripsi Laporan</label>
                 <div class="bg-gray-50 rounded-lg p-4">
                     <p class="text-gray-800 leading-relaxed">
-                        Jalan utama di Desa XYZ mengalami kerusakan parah selama 2 minggu terakhir. Terdapat lubang
-                        besar yang membahayakan pengendara, terutama saat malam hari. Memerlukan penanganan segera dari
-                        dinas terkait.
+                        {{ $report->aspiration }}
                     </p>
                 </div>
             </div>
@@ -73,13 +76,33 @@
                     <i class="fas fa-reply"></i>
                     <span>Kirim Balasan</span>
                 </button>
-                <button onclick="deleteReport()"
-                    class="flex-1 flex items-center justify-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
-                    <i class="fas fa-trash"></i>
-                    <span>Hapus Laporan</span>
-                </button>
+                <form action="{{ route('report.destroy', $report->id) }}" method="POST" class="flex-1">
+                    @csrf
+                    @method('DELETE')
+                    <button onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini?')"
+                        class="w-full flex items-center justify-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors">
+                        <i class="fas fa-trash"></i>
+                        <span>Hapus Laporan</span>
+                    </button>
+
+                </form>
+
+
+                <form action="{{ route('report.update', $report->id) }}" method="POST" class="flex-1">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" id="statusInput" name="status" value="{{ $report->status }}">
+
+                    <button
+                        class="w-full flex items-center justify-center gap-2 bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        <span>Simpan</span>
+                    </button>
+                </form>
+
             </div>
         </div>
+
     </div>
 
     <!-- Modal Balasan -->
@@ -122,7 +145,6 @@
     </div>
 
     <script>
-        // Status Configuration
         const statusOptions = {
             pending: {
                 color: 'bg-red-500',
@@ -138,9 +160,8 @@
             }
         };
 
-        let currentStatus = 'proses';
+        let currentStatus = '{{ $report->status }}';
 
-        // Status Dropdown Logic
         function toggleStatusDropdown() {
             const dropdown = document.getElementById('statusDropdown');
             dropdown.classList.toggle('hidden');
@@ -150,27 +171,25 @@
             const options = Object.entries(statusOptions)
                 .filter(([key]) => key !== currentStatus)
                 .map(([key, value]) => `
-            <button onclick="changeStatus('${key}')" class="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full ${value.color}"></span>
-                ${value.text}
-            </button>
-        `).join('');
+        <button onclick="changeStatus('${key}')" class="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full ${value.color}"></span>
+            ${value.text}
+        </button>
+    `).join('');
             dropdown.innerHTML = options;
         }
 
         function changeStatus(newStatus) {
             currentStatus = newStatus;
-            const statusText = document.getElementById('statusText');
-            const statusButton = document.getElementById('statusButton');
+            document.getElementById('statusInput').value = newStatus;
 
-            // Update UI
+            const statusText = document.getElementById('statusText');
             statusText.textContent = statusOptions[newStatus].text;
-            statusButton.className =
-                `flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors`;
 
             // Close dropdown
             document.getElementById('statusDropdown').classList.add('hidden');
         }
+
 
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
@@ -197,13 +216,6 @@
             alert('Balasan berhasil dikirim!');
             closeReplyModal();
             e.target.reset();
-        }
-
-        function deleteReport() {
-            if (confirm('Apakah Anda yakin ingin menghapus laporan ini?')) {
-                alert('Laporan berhasil dihapus');
-                window.location.href = '/laporan';
-            }
         }
     </script>
 

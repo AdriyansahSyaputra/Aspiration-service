@@ -28,7 +28,15 @@
 
         {{-- Mobile Header --}}
         <div class="md:hidden p-4 pt-16 bg-red-50 border-b border-gray-100">
-            <h2 class="text-red-500 font-semibold text-lg">Menu</h2>
+            @if (Auth::check())
+            <div class="flex items-center gap-4">
+                <img src="/img/user/default.jpg" alt="" class="w-8 h-8 rounded-full">
+                <div class="flex flex-col">
+                    <h1 class="text-base font-semibold text-gray-700">{{ Auth::user()->name }}</h1>
+                    <span class="text-sm text-gray-600">{{ Auth::user()->email }}</span>
+                </div>
+            </div>
+            @endif
         </div>
 
         <ul class="flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-2 p-4 md:p-0">
@@ -62,21 +70,60 @@
 
         {{-- Mobile Login Button --}}
         <div class="md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100">
-            <button
-                class="w-full px-4 py-3 bg-red-500 hover:bg-red-600 rounded-lg transition duration-300 flex items-center justify-center gap-2">
-                <i class="fas fa-sign-in-alt text-white"></i>
-                <a href="/login" class="text-white font-medium">Login</a>
-            </button>
+            @if (Auth::check())
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button
+                        class="w-full px-4 py-3 bg-gray-500 hover:bg-gray-600 rounded-lg transition duration-300 flex items-center justify-center gap-2">
+                        <i class="fas fa-sign-in-alt text-white"></i>
+                        <a href="/login" class="text-white font-medium">Logout</a>
+                    </button>
+                </form>
+            @else
+                <button
+                    class="w-full px-4 py-3 bg-red-500 hover:bg-red-600 rounded-lg transition duration-300 flex items-center justify-center gap-2">
+                    <i class="fas fa-sign-in-alt text-white"></i>
+                    <a href="/login" class="text-white font-medium">Login</a>
+                </button>
+            @endif
         </div>
     </nav>
 
     {{-- Desktop Login Button --}}
     <div class="hidden md:flex items-center z-20">
-        <button
-            class="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition duration-300 flex items-center gap-2">
-            <i class="fas fa-sign-in-alt text-white"></i>
-            <a href="/login" class="text-white font-medium">Login</a>
-        </button>
+        @if (Auth::check())
+            <div class="relative flex items-center gap-2 cursor-pointer" id="user-menu-button">
+                <img src="{{ Auth::user()->profile_image ?? '/img/user/default.jpg' }}" alt="Profile Image"
+                    class="w-8 h-8 rounded-full">
+                <div class="flex flex-col">
+                    <h3 class="text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</h3>
+                    <span class="text-xs text-gray-600">{{ Auth::user()->email }}</span>
+                </div>
+                <i class="fas fa-chevron-down text-gray-600"></i>
+
+                <!-- Dropdown -->
+                <div id="dropdown"
+                    class="absolute top-10 right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg hidden z-10">
+                    <ul class="py-1 text-sm text-gray-700">
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        @else
+            <button
+                class="px-4 py-2 bg-red-500 rounded-md hover:bg-red-600 transition duration-300 flex items-center gap-2">
+                <i class="fas fa-sign-in-alt text-white"></i>
+                <a href="/login" class="text-white font-medium">Login</a>
+            </button>
+        @endif
+
     </div>
 </header>
 
@@ -117,5 +164,12 @@
         if (e.key === "Escape" && isMenuOpen) {
             toggleMenu();
         }
+    });
+
+    // Dropdown logout button
+    const userMenuButton = document.getElementById('user-menu-button');
+    const dropdown = document.getElementById('dropdown');
+    userMenuButton.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
     });
 </script>
