@@ -115,21 +115,21 @@
                 </button>
             </div>
 
-            <form id="replyForm" onsubmit="submitReply(event)">
+            <form id="replyForm" action="{{ route('reports.store', $report->id) }}" method="POST">
+                @csrf
+                <input type="hidden" name="aspiration_id" value="{{ $report->id }}">
+                <input type="hidden" name="user_id" value="{{ $report->user->id }}">
+
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Subjek</label>
-                        <input type="text" required
-                            class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                        <input type="text" required name="subject" value="{{ $report->title }}"
+                            class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" readonly>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Pesan</label>
-                        <textarea required rows="4"
+                        <textarea required rows="4" name="response"
                             class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Lampiran</label>
-                        <input type="file" class="w-full px-4 py-2 rounded-lg border">
                     </div>
                 </div>
 
@@ -210,13 +210,6 @@
             document.getElementById('replyModal').classList.add('hidden');
         }
 
-        function submitReply(e) {
-            e.preventDefault();
-            // Add your submission logic here
-            alert('Balasan berhasil dikirim!');
-            closeReplyModal();
-            e.target.reset();
-        }
     </script>
 
     <style>

@@ -77,4 +77,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Aspiration::class);
     }
+
+    public function responses(): HasMany
+    {
+        return $this->hasMany(Responses::class);
+    }
 }

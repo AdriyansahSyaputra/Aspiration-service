@@ -7,12 +7,16 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AspirationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MyReportController;
 
 Route::get('/tentang-kami', function () {
     return view('about.about', [
         'title' => 'Tentang Kami'
     ]);
 });
+
+// Route for laporan saya
+Route::get('/laporan-saya', [MyReportController::class, 'index'])->middleware(['auth', 'user']);
 
 // Route for register
 Route::controller(RegisterController::class)->group(function () {
@@ -27,8 +31,9 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
+// Route for dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'admin']);
+    ->middleware(['auth', 'admin'])->name('dashboard');
 
 
 // Route for home page
@@ -42,6 +47,7 @@ Route::middleware(['auth', 'admin'])->controller(ReportController::class)->group
     Route::get('/dashboard/reports', 'index')->name('reports');
     Route::delete('/dashboard/report/{id}', 'destroy')->name('report.destroy');
     Route::get('/dashboard/report/detail/{report:slug}', 'show')->name('reports.show');
+    Route::post('/dashboard/report/{report:slug}/reply', 'store')->name('reports.store');
     Route::put('/dashboard/report/{id}', 'update')->name('report.update');
 });
 

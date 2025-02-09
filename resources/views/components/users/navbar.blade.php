@@ -29,13 +29,13 @@
         {{-- Mobile Header --}}
         <div class="md:hidden p-4 pt-16 bg-red-50 border-b border-gray-100">
             @if (Auth::check())
-            <div class="flex items-center gap-4">
-                <img src="/img/user/default.jpg" alt="" class="w-8 h-8 rounded-full">
-                <div class="flex flex-col">
-                    <h1 class="text-base font-semibold text-gray-700">{{ Auth::user()->name }}</h1>
-                    <span class="text-sm text-gray-600">{{ Auth::user()->email }}</span>
+                <div class="flex items-center gap-4">
+                    <img src="/img/user/default.jpg" alt="" class="w-8 h-8 rounded-full">
+                    <div class="flex flex-col">
+                        <h1 class="text-base font-semibold text-gray-700">{{ Auth::user()->name }}</h1>
+                        <span class="text-sm text-gray-600">{{ Auth::user()->email }}</span>
+                    </div>
                 </div>
-            </div>
             @endif
         </div>
 
@@ -66,6 +66,17 @@
                         Kami</span>
                 </a>
             </li>
+            @if (Auth::check())
+            <li class="w-full md:w-auto">
+                <a href="/laporan-saya"
+                    class="group flex items-center gap-3 px-4 py-3 md:py-2 rounded-lg hover:bg-red-50 md:hover:bg-red-500 transition-all duration-300">
+                    <i class="fas fa-file-alt text-red-500 group-hover:md:text-white transition-colors"></i>
+                    <span
+                        class="font-medium text-gray-700 group-hover:text-red-500 md:text-red-500 md:group-hover:text-white transition-colors">Laporan
+                        Saya</span>
+                </a>
+            </li>
+            @endif
         </ul>
 
         {{-- Mobile Login Button --}}

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Aspiration extends Model
@@ -75,4 +76,9 @@ class Aspiration extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function responses(): HasMany
+    {
+        return $this->hasMany(Responses::class);
+    }   
 }

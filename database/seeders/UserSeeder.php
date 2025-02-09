@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
+            'id' => 1,
             'name' => 'Joseph Guardiola',
             'slug' => 'joseph-guardiola',
             'email' => 'joseph@gmail.com',
@@ -24,6 +25,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
+            'id' => 2,
             'name' => 'John Doe',
             'slug' => 'john-doe',
             'email' => 'john@gmail.com',

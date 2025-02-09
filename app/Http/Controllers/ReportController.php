@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ResponseCreated;
 use App\Models\Aspiration;
+use App\Models\Responses;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -38,5 +40,22 @@ class ReportController extends Controller
 
         return redirect()->route('reports.show', $report->slug)
             ->with('success', 'Status laporan berhasil diperbarui.');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'subject' => 'required|string|max:255',
+            'response' => 'required|string',
+            'aspiration_id' => 'required|exists:aspirations,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+
+        $response = Responses::create($validated);
+
+        event(new ResponseCreated($response));
+
+        return redirect()->route('reports.show', $response->aspiration->slug)
+            ->with('success', 'Respon berhasil dikirim');
     }
 }
