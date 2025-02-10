@@ -4,11 +4,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\AspirationController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExploreController;
 use App\Http\Controllers\MyReportController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AspirationController;
 
+
+// Route for home page
+Route::controller(AspirationController::class)->group(function () {
+    Route::get('/', 'index')->name('home');
+    Route::post('/', 'store')->name('aspiration.store')->middleware('auth');
+});
+
+// Route for explore page
+Route::get('/jelajah', [ExploreController::class, 'index'])->name('explore');
+
+// Route for tentang kami
 Route::get('/tentang-kami', function () {
     return view('about.about', [
         'title' => 'Tentang Kami'
@@ -34,13 +46,6 @@ Route::controller(LoginController::class)->group(function () {
 // Route for dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'admin'])->name('dashboard');
-
-
-// Route for home page
-Route::controller(AspirationController::class)->group(function () {
-    Route::get('/', 'index')->name('home');
-    Route::post('/', 'store')->name('aspiration.store')->middleware('auth');
-});
 
 // Route for reports page
 Route::middleware(['auth', 'admin'])->controller(ReportController::class)->group(function () {

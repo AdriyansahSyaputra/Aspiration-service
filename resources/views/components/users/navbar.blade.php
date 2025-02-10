@@ -49,7 +49,7 @@
                 </a>
             </li>
             <li class="w-full md:w-auto">
-                <a href="/"
+                <a href="/jelajah"
                     class="group flex items-center gap-3 px-4 py-3 md:py-2 rounded-lg hover:bg-red-50 md:hover:bg-red-500 transition-all duration-300">
                     <i class="fas fa-search text-red-500 group-hover:md:text-white transition-colors"></i>
                     <span
