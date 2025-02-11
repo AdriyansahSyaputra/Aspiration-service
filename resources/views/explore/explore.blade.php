@@ -3,37 +3,64 @@
     <div class="container mx-auto px-4 py-8 md:px-8 lg:px-16">
         <!-- Search Bar dan Filter -->
         <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-            <form id="filter-form" method="GET" action="{{ route('explore') }}">
-                <div class="flex flex-col md:flex-row gap-4">
+
+            <div class="flex flex-col md:flex-row md:justify-between gap-4">
+                <form method="GET" action="{{ route('explore.search') }}">
                     <!-- Search Bar -->
-                    <div class="flex-grow relative">
+                    <div class="flex relative gap-4">
                         <input type="text" id="search" name="search" placeholder="Cari laporan..."
+                            value="{{ request('search') }}"
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div>
 
+                        <button type="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300">
+                            Search
+                        </button>
+                    </div>
+                </form>
+
+                <form id="filter-form" action="{{ route('explore.filter') }}" method="GET"
+                    class="w-full md:w-auto flex flex-col md:flex-row gap-2">
                     <!-- Dropdown Filter (Instansi) -->
                     <select id="instansi" name="instansi"
                         class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="" disabled selected>Pilih Instansi</option>
-                        <option value="Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi">Kementerian Pendidikan,
-                            Kebudayaan, Riset, dan Teknologi</option>
-                        <option value="Kementerian Kesehatan">Kementerian Kesehatan</option>
-                        <option value="Kementerian Lingkungan Hidup dan Kehutanan">Kementerian Lingkungan Hidup dan
-                            Kehutanan
+                        <option value="" class="text-xs md:text-base">Semua Instansi</option>
+                        <option value="Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi"
+                            {{ request('instansi') === 'Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi' ? 'selected' : '' }}
+                            class="text-xs md:text-base">
+                            Kementerian Pendidikan
                         </option>
-                        <option value="Kementerian Perhubungan">Kementerian Perhubungan</option>
-                        <option value="Kementerian Sosial">Kementerian Sosial</option>
+                        <option value="Kementerian Kesehatan"
+                            {{ request('instansi') === 'Kementerian Kesehatan' ? 'selected' : '' }}
+                            class="text-xs md:text-base">
+                            Kementerian Kesehatan
+                        </option>
+                        <option value="Kementerian Lingkungan Hidup dan Kehutanan"
+                            {{ request('instansi') === 'Kementerian Lingkungan Hidup dan Kehutanan' ? 'selected' : '' }}
+                            class="text-xs md:text-base">
+                            Kementerian Lingkungan Hidup
+                        </option>
+                        <option value="Kementerian Perhubungan"
+                            {{ request('instansi') === 'Kementerian Perhubungan' ? 'selected' : '' }}
+                            class="text-xs md:text-base">
+                            Kementerian Perhubungan
+                        </option>
+                        <option value="Kementerian Sosial"
+                            {{ request('instansi') === 'Kementerian Sosial' ? 'selected' : '' }}
+                            class="text-xs md:text-base">
+                            Kementerian Sosial
+                        </option>
                     </select>
 
-                    <!-- Dropdown Filter (Terbaru/Terlama) -->
                     <select id="sort" name="sort"
                         class="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
+                        <option value="terbaru" {{ request('sort') === 'terbaru' ? 'selected' : '' }}>Terbaru</option>
+                        <option value="terlama" {{ request('sort') === 'terlama' ? 'selected' : '' }}>Terlama</option>
                     </select>
-                </div>
-            </form>
+
+                </form>
+            </div>
 
         </div>
 
@@ -76,14 +103,15 @@
 
         <!-- Aspirations Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Aspiration Card -->
-            @foreach ($aspirations as $aspiration)
+            @forelse ($aspirations as $aspiration)
+                <!-- Aspiration Card -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                    <img src="/api/placeholder/400/200" alt="Laporan" class="w-full h-48 object-cover">
+                    <img src="{{ $aspiration->attachment ? asset('storage/' . $aspiration->attachment) : asset('img/banner/aspirasi.jpg') }}"
+                        alt="Laporan" class="w-full h-48 object-cover">
                     <div class="p-6">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <p class="text-sm text-gray-500 mb-1">{{ $aspiration->id }}</p>
+                                <p class="text-sm text-gray-500 mb-1">#{{ $aspiration->id }}</p>
                                 <h3 class="text-xl font-semibold mb-2">{{ $aspiration->title }}</h3>
                                 <p class="text-sm text-gray-500 mb-4">
                                     {{ \Carbon\Carbon::parse($aspiration->date_occurred)->format('d M Y') }}</p>
@@ -94,7 +122,6 @@
                         </div>
                         <p class="text-gray-600 mb-4 line-clamp-3">{{ $aspiration->aspiration }}</p>
                         <div class="flex justify-between items-center">
-
                             @if ($aspiration->status == 'selesai')
                                 <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Selesai</span>
                             @elseif($aspiration->status == 'pending')
@@ -110,9 +137,12 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
-
+            @empty
+                <p class="text-center text-gray-500 capitalize col-span-full">Aspirasi berdasarkan
+                    "{{ request('search') }}" tidak ditemukan</p>
+            @endforelse
         </div>
+
 
         <!-- Pagination -->
         <div class="flex justify-center mt-8">
@@ -137,10 +167,6 @@
                 this.classList.toggle('fas');
                 this.classList.toggle('far');
             });
-        });
-
-        document.getElementById('search').addEventListener('input', function() {
-            document.getElementById('filter-form').submit();
         });
 
         document.getElementById('instansi').addEventListener('change', function() {

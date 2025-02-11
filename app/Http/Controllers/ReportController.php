@@ -58,4 +58,31 @@ class ReportController extends Controller
         return redirect()->route('reports.show', $response->aspiration->slug)
             ->with('success', 'Respon berhasil dikirim');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+
+        $reports = Aspiration::with('user')
+            ->where('title', 'like', "%{$search}%")
+            ->orWhere('id', 'like', "%{$search}%") 
+            ->orWhere('institution', 'like', "%{$search}%") 
+            ->orWhereHas('user', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            })
+            ->get();
+
+        return view('dashboards.reports.report', compact('reports'));
+    }
+
+    public function filter(Request $request)
+    {
+        $status = $request->input('status');
+
+        $reports = Aspiration::when($status, function ($query) use ($status) {
+            return $query->where('status', $status);
+        })->get();
+
+        return view('dashboards.reports.report', compact('reports'));
+    }
 }

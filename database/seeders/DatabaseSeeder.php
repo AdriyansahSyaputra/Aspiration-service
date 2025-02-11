@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Aspiration;
 use App\Models\User;
+use Database\Factories\AspirationFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
@@ -17,7 +19,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            AspirationSeeder::class
         ]);
+        Aspiration::factory(10)->create();
+
     }
 }

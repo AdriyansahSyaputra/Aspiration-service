@@ -5,18 +5,30 @@
         <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-4 md:mb-0">Manajemen Laporan</h1>
             <div class="flex items-center gap-4">
-                <div class="relative">
-                    <input type="text" placeholder="Cari laporan..."
-                        class="w-full md:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
-                </div>
-                <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Filter Status</option>
-                    <option>Semua</option>
-                    <option>Selesai</option>
-                    <option>Pending</option>
-                    <option>Proses</option>
-                </select>
+                <form action="{{ route('reports.search') }}" method="GET">
+                    <div class="relative">
+                        <input type="text" placeholder="Cari laporan..." name="search"
+                            class="w-full md:w-64 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <button type="submit" class="absolute right-3 top-2 text-gray-400">
+                            <i class="fas fa-search "></i>
+                        </button>
+                    </div>
+                </form>
+
+                <form id="filter-form" action="{{ route('reports.status') }}" method="GET">
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        name="status" id="status">
+                        <option value="" class="text-xs md:text-base">Semua</option>
+                        <option value="selesai" class="text-xs md:text-base"
+                            {{ request('status') === 'selesai' ? 'selected' : '' }}>Selesai</option>
+                        <option value="pending" class="text-xs md:text-base"
+                            {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="proses" class="text-xs md:text-base"
+                            {{ request('status') === 'proses' ? 'selected' : '' }}>Proses</option>
+                    </select>
+                </form>
+
             </div>
         </div>
 
@@ -78,8 +90,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <!-- Sample Data -->
-                        @foreach ($reports as $report)
+                        @forelse ($reports as $report)
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 text-sm">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 font-medium text-sm">{{ $report->id }}</td>
@@ -118,13 +129,18 @@
                                                 <i class="fas fa-trash mr-2 text-red-500"></i>Hapus
                                             </button>
                                         </form>
-
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
-
+                        @empty
+                            <tr>
+                                <td colspan="8" class="px-6 py-4 text-center text-sm text-gray-500 capitalize">
+                                    data laporan "{{ request('search') }}" tidak ditemukan.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -156,10 +172,8 @@
             // Implement search logic here
         });
 
-        // Sample Filter Functionality
-        document.querySelector('select').addEventListener('change', (e) => {
-            console.log('Filter:', e.target.value);
-            // Implement filter logic here
+        document.getElementById('status').addEventListener('change', function() {
+            document.getElementById('filter-form').submit();
         });
     </script>
 

@@ -18,7 +18,11 @@ Route::controller(AspirationController::class)->group(function () {
 });
 
 // Route for explore page
-Route::get('/jelajah', [ExploreController::class, 'index'])->name('explore');
+Route::controller(ExploreController::class)->group(function () {
+    Route::get('/jelajah', 'index')->name('explore');
+    Route::get('/jelajah/filter', 'filter')->name('explore.filter');
+    Route::get('/jelajah', 'search')->name('explore.search');
+});
 
 // Route for tentang kami
 Route::get('/tentang-kami', function () {
@@ -52,8 +56,18 @@ Route::middleware(['auth', 'admin'])->controller(ReportController::class)->group
     Route::get('/dashboard/reports', 'index')->name('reports');
     Route::delete('/dashboard/report/{id}', 'destroy')->name('report.destroy');
     Route::get('/dashboard/report/detail/{report:slug}', 'show')->name('reports.show');
+
+    // untuk memberikan tanggapan laporan
     Route::post('/dashboard/report/{report:slug}/reply', 'store')->name('reports.store');
+
+    // untuk mengubah status laporan
     Route::put('/dashboard/report/{id}', 'update')->name('report.update');
+
+    // Route Pencarian
+    Route::get('/dashboard/report', 'search')->name('reports.search');
+    
+    // Route filter status
+    Route::get('/dashboard/report/filter', 'filter')->name('reports.status');
 });
 
 // Route for user page
