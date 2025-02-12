@@ -58,11 +58,9 @@
                 </div>
 
                 <div>
-                    <a href="#" class="text-sm text-blue-500 hover:underline">Lupa Password?</a>
+                    <a href="/lupa-password" class="text-sm text-blue-500 hover:underline">Lupa Password?</a>
                 </div>
             </div>
-
-
 
             <button type="submit"
                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-md shadow-md focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Login</button>

@@ -9,7 +9,8 @@ use App\Http\Controllers\MyReportController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AspirationController;
-
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\ForgotPasswordController;
 
 // Route for home page
 Route::controller(AspirationController::class)->group(function () {
@@ -47,6 +48,23 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/logout', 'logout')->name('logout');
 });
 
+// Route for Send Email Verif
+Route::middleware('guest')->controller(ForgotPasswordController::class)->group(function () {
+    Route::get('/lupa-password', 'index')->name('forgot-password');
+    Route::post('/lupa-password/email', 'sendResetLinkEmail')->name('password.email');
+});
+
+// Route for reset password
+Route::middleware('guest')->controller(ResetPasswordController::class)->group(function () {
+    Route::get('/reset-password/{token}', 'index')->name('password.reset');
+    Route::post('/reset-password', 'reset')->name('password.update');
+});
+
+// Blokir akses reset password jika user sudah login
+Route::middleware('auth')->get('/reset-password', function () {
+    abort(403, 'Forbidden');
+});
+
 // Route for dashboard
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'admin'])->name('dashboard');
@@ -65,7 +83,7 @@ Route::middleware(['auth', 'admin'])->controller(ReportController::class)->group
 
     // Route Pencarian
     Route::get('/dashboard/report', 'search')->name('reports.search');
-    
+
     // Route filter status
     Route::get('/dashboard/report/filter', 'filter')->name('reports.status');
 });

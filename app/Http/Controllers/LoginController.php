@@ -16,8 +16,11 @@ class LoginController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        // Cek role
-        if (Auth::attempt($credentials)) {
+        // Cek apakah checkbox remember me dicentang
+        $remember = $request->has('remember') ? true : false;
+
+        // Cek role & remember me
+        if (Auth::attempt($credentials, $remember)) {
             if (Auth::user()->role == 'admin') {
                 return redirect()->route('dashboard');
             } elseif (Auth::user()->role == 'user') {

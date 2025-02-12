@@ -91,11 +91,11 @@
                     </button>
                 </form>
             @else
-                <button
-                    class="w-full px-4 py-3 bg-red-500 hover:bg-red-600 rounded-lg transition duration-300 flex items-center justify-center gap-2">
+                <a href="/login"
+                    class="w-full px-4 py-3 bg-red-500 hover:bg-red-600 rounded-lg transition duration-300 flex items-center justify-center gap-2 text-white font-medium">
                     <i class="fas fa-sign-in-alt text-white"></i>
-                    <a href="/login" class="text-white font-medium">Login</a>
-                </button>
+                    Login
+                </a>
             @endif
         </div>
     </nav>
