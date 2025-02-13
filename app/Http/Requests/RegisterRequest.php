@@ -20,6 +20,7 @@ class RegisterRequest extends FormRequest
             'fullName' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', 'min:8'],
+            'verification' => ['required', 'integer'],
         ];
     }
 
@@ -27,6 +28,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'password.confirmed' => 'The password confirmation does not match.',
+            'verification.required' => 'The verification code is required.',
         ];
     }
 

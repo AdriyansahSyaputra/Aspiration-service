@@ -39,6 +39,7 @@ Route::get('/laporan-saya', [MyReportController::class, 'index'])->middleware(['
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'index')->name('register.index');
     Route::post('/register', 'store')->name('register.store');
+    Route::post('/send-otp', 'sendOtp')->name('send.otp');
 });
 
 // Route for login
@@ -61,7 +62,7 @@ Route::middleware('guest')->controller(ResetPasswordController::class)->group(fu
 });
 
 // Blokir akses reset password jika user sudah login
-Route::middleware('auth')->get('/reset-password', function () {
+Route::middleware('auth')->get('/reset-password', function () { 
     abort(403, 'Forbidden');
 });
 

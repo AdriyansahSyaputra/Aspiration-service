@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Registrasi</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css'])
 
     {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -28,7 +29,8 @@
             {{-- Nama Lengkap --}}
             <div class="relative">
                 <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
-                <input type="text" id="fullName" name="fullName" value="{{ old('fullName') }}" placeholder="Masukkan Nama Lengkap anda"
+                <input type="text" id="fullName" name="fullName" value="{{ old('fullName') }}"
+                    placeholder="Masukkan Nama Lengkap anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
                 @error('fullName')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -38,9 +40,26 @@
             {{-- Email --}}
             <div class="relative">
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email anda"
+                <input type="email" id="email" name="email" value="{{ old('email') }}"
+                    placeholder="Masukkan email anda"
                     class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+
+                <button type="button" id="sendOtpButton"
+                    class="absolute right-0 top-7 bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-600">Kirim
+                    OTP</button>
+
                 @error('email')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- OTP --}}
+            <div class="relative">
+                <label for="verification" class="block text-sm font-medium text-gray-700 mb-1">Kode Verifikasi</label>
+                <input type="text" id="verification" name="verification"
+                    placeholder="Masukkan OTP verifikasi"
+                    class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                @error('verification')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
             </div>
@@ -111,6 +130,32 @@
             const type = passwordInput.type === 'password' ? 'text' : 'password';
             passwordInput.type = type;
         }
+
+        //  For Otp
+        document.getElementById('sendOtpButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+
+            if (!email) {
+                alert('Masukkan email terlebih dahulu.');
+                return;
+            }
+
+            fetch("{{ route('send.otp') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                })
+                .then(response => response.json())
+                .then(data => alert(data.message))
+                .catch(error => alert('Terjadi kesalahan, coba lagi.'));
+        });
     </script>
 
 </body>
