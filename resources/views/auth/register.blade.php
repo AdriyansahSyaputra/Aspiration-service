@@ -86,7 +86,7 @@
 
             {{-- Confirm Password --}}
             <div class="relative">
-                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm
+                <label for="password_confirrmation" class="block text-sm font-medium text-gray-700 mb-1">Confirm
                     Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation"
                     placeholder="Masukkan password anda"

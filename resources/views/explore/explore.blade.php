@@ -105,23 +105,30 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($aspirations as $aspiration)
                 <!-- Aspiration Card -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <div
+                    class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
                     <img src="{{ $aspiration->attachment ? asset('storage/' . $aspiration->attachment) : asset('img/banner/aspirasi.jpg') }}"
                         alt="Laporan" class="w-full h-48 object-cover">
-                    <div class="p-6">
+
+                    <div class="p-6 flex flex-col flex-grow">
                         <div class="flex justify-between items-start mb-4">
                             <div>
                                 <p class="text-sm text-gray-500 mb-1">#{{ $aspiration->id }}</p>
                                 <h3 class="text-xl font-semibold mb-2">{{ $aspiration->title }}</h3>
-                                <p class="text-sm text-gray-500 mb-4">
-                                    {{ \Carbon\Carbon::parse($aspiration->date_occurred)->format('d M Y') }}</p>
+                                <p class="text-sm text-gray-500">
+                                    {{ \Carbon\Carbon::parse($aspiration->date_occurred)->format('d M Y') }}
+                                </p>
                             </div>
                             <button class="text-gray-400 hover:text-blue-500">
                                 <i class="far fa-bookmark text-xl"></i>
                             </button>
                         </div>
-                        <p class="text-gray-600 mb-4 line-clamp-3">{{ $aspiration->aspiration }}</p>
-                        <div class="flex justify-between items-center">
+
+                        <!-- Bagian Konten -->
+                        <p class="text-gray-600 mb-4 flex-grow line-clamp-3 min-h-[72px]">{{ $aspiration->aspiration }}
+                        </p>
+
+                        <div class="flex justify-between items-center mt-auto">
                             @if ($aspiration->status == 'selesai')
                                 <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Selesai</span>
                             @elseif($aspiration->status == 'pending')

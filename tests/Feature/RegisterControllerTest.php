@@ -2,53 +2,122 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Carbon\Carbon;
 use Tests\TestCase;
+use App\Models\OtpVerification;
+use App\Notifications\SendOtpNotification;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Notifications\AnonymousNotifiable;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class RegisterControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testRegisterSuccess()
+    public function testSendOtpSuccess()
     {
-        // Mock data input
-        $formData = [
-            'fullName' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ];
+        Notification::fake();
 
-        // Hit endpoint register
-        $response = $this->post(route('register.store'), $formData);
-
-        // Pastikan user terdaftar di database
-        $this->assertDatabaseHas('users', [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
+        $response = $this->postJson('/send-otp', [
+            'email' => 'test@example.com',
         ]);
 
-        // Redirect ke halaman login
-        $response->assertRedirect(route('login'));
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'OTP berhasil dikirim']);
+
+        Notification::assertSentTo(
+            new AnonymousNotifiable,
+            SendOtpNotification::class
+        );
+
+        $this->assertDatabaseHas('otp_verifications', [
+            'email' => 'test@example.com',
+        ]);
     }
 
-    public function testRegisterFailed()
+    public function testRegisterWithValidOtp()
     {
-        // Invalid data (password tidak sesuai)
-        $formData = [
-            'fullName' => '',
-            'email' => 'not-an-email',
-            'password' => 'pass',
-            'password_confirmation' => 'mismatch',
-        ];
+        $otp = rand(100000, 999999);
 
-        $response = $this->post(route('register.store'), $formData);
+        OtpVerification::create([
+            'email' => 'test@example.com',
+            'otp' => (string) $otp, // Pastikan tersimpan sebagai string
+            'expired_at' => now()->addMinutes(5),
+        ]);
 
-        // Pastikan tidak ada user yang terdaftar
-        $this->assertDatabaseCount('users', 0);
 
-        // Pastikan validasi gagal dan kembali ke halaman sebelumnya
-        $response->assertSessionHasErrors(['fullName', 'email', 'password']);
+        $response = $this->post('/register', [
+            'fullName' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'verification' => (string) $otp,
+        ]);
+
+        $response->assertRedirect(route('login'));
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'name' => 'John Doe',
+        ]);
+
+        $this->assertDatabaseMissing('otp_verifications', [
+            'email' => 'test@example.com',
+        ]);
+    }
+
+    public function testRegisterWithInvalidOtp()
+    {
+        OtpVerification::create([
+            'email' => 'test@example.com',
+            'otp' => '123456',
+            'expired_at' => Carbon::now()->addMinutes(5),
+        ]);
+
+        $response = $this->post(route('register.index'), [
+            'fullName' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'verification' => '999999',
+        ]);
+
+        $response->assertSessionHasErrors(['verification']);
+        $this->assertDatabaseHas('otp_verifications', ['email' => 'test@example.com']);
+    }
+
+    public function testRegisterWithExpiredOtp()
+    {
+        OtpVerification::create([
+            'email' => 'test@example.com',
+            'otp' => '123456',
+            'expired_at' => Carbon::now()->subMinutes(5),
+        ]);
+
+        $response = $this->post(route('register.index'), [
+            'fullName' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'verification' => '123456',
+        ]);
+
+        $response->assertSessionHasErrors(['verification']);
+        $this->assertDatabaseHas('otp_verifications', ['email' => 'test@example.com']);
+    }
+
+    public function testRegisterWithoutSendingOtpFirst()
+    {
+        $response = $this->post(route('register.index'), [
+            'fullName' => 'John Doe',
+            'email' => 'test@example.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+            'verification' => '123456',
+        ]);
+
+        $response->assertSessionHasErrors(['email']);
+        $this->assertDatabaseMissing('users', ['email' => 'test@example.com']);
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
+use App\Models\OtpVerification;
 use App\Notifications\SendOtpNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -26,17 +27,17 @@ class RegisterController extends Controller
         $validated = $request->validated();
 
         // Cek apakah OTP cocok
-        $user = User::where('email', $validated['email'])->first();
+        $otpData = OtpVerification::where('email', $validated['email'])->first();
 
-        if (!$user) {
+        if (!$otpData) {
             return back()->withErrors(['email' => 'Email tidak ditemukan, silakan kirim OTP terlebih dahulu.'])->withInput();
         }
 
-        if ($user->otp !== $validated['verification']) {
+        if ((string) $otpData->otp !== $validated['verification']) {
             return back()->withErrors(['verification' => 'Kode OTP tidak valid.']);
         }
 
-        if (Carbon::now()->gt($user->otp_expired_at)) {
+        if (Carbon::now()->gt($otpData->expired_at)) {
             return back()->withErrors(['verification' => 'Kode OTP sudah kadaluarsa.']);
         }
 
@@ -46,9 +47,10 @@ class RegisterController extends Controller
             'password' => $validated['password'],
             'role' => 'user',
             'email_verified_at' => now(),
-            'otp' => null,
-            'otp_expired_at' => null
         ]);
+
+        // Hapus OTP setelah digunakan
+        $otpData->delete();
 
         // Redirect ke halaman login
         return redirect()->route('login');
@@ -65,13 +67,12 @@ class RegisterController extends Controller
             $otp = rand(100000, 999999);
 
             // Simpan OTP ke table terpisah
-            DB::table('otp_verifications')->updateOrInsert(
+            OtpVerification::updateOrInsert(
                 ['email' => $request->email],
                 [
                     'otp' => $otp,
                     'expired_at' => Carbon::now()->addMinutes(5),
                     'updated_at' => now(),
-                    'created_at' => now(),
                 ]
             );
 
