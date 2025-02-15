@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Jobs\SendOtpJob;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Models\OtpVerification;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\RegisterRequest;
-use App\Models\OtpVerification;
 use App\Notifications\SendOtpNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -41,7 +42,7 @@ class RegisterController extends Controller
             return back()->withErrors(['verification' => 'Kode OTP sudah kadaluarsa.']);
         }
 
-        $user = User::create([
+        User::create([
             'name' => $validated['fullName'],
             'email' => $validated['email'],
             'password' => $validated['password'],
@@ -77,8 +78,7 @@ class RegisterController extends Controller
             );
 
             // Kirim notifikasi
-            Notification::route('mail', $request->email)
-                ->notify(new SendOtpNotification($otp));
+            dispatch(new SendOtpJob($request->email, $otp));
 
             return response()->json(['message' => 'OTP berhasil dikirim'], 200);
         } catch (\Exception $e) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -74,6 +75,24 @@ class Aspiration extends Model
         return 'slug';
     }
 
+    public function getFormattedDateOccurredAttribute()
+    {
+        return Carbon::parse($this->date_occurred)->format('d M Y');
+    }
+
+    public function getStatusBadgeAttribute()
+    {
+        $badges = [
+            'selesai' => ['text' => 'Selesai', 'class' => 'bg-green-100 text-green-800'],
+            'pending' => ['text' => 'Dalam Proses', 'class' => 'bg-yellow-100 text-yellow-800'],
+            'default' => ['text' => 'Pending', 'class' => 'bg-blue-100 text-blue-800'],
+        ];
+
+        $status = $badges[$this->status] ?? $badges['default'];
+
+        return "<span class='px-3 py-1 rounded-full text-sm {$status['class']}'>{$status['text']}</span>";
+    }
+
     // Relationship with User model
     public function user(): BelongsTo
     {
@@ -83,5 +102,5 @@ class Aspiration extends Model
     public function responses(): HasMany
     {
         return $this->hasMany(Responses::class);
-    }   
+    }
 }

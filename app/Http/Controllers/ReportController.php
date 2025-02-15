@@ -11,7 +11,7 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $reports = Aspiration::with('user')->latest()->get();
+        $reports = Aspiration::with('user')->latest()->paginate(5);
         return view('dashboards.reports.report', compact('reports'));
     }
 

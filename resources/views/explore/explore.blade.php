@@ -116,7 +116,7 @@
                                 <p class="text-sm text-gray-500 mb-1">#{{ $aspiration->id }}</p>
                                 <h3 class="text-xl font-semibold mb-2">{{ $aspiration->title }}</h3>
                                 <p class="text-sm text-gray-500">
-                                    {{ \Carbon\Carbon::parse($aspiration->date_occurred)->format('d M Y') }}
+                                    {{ $aspiration->formatted_date_occurred }}
                                 </p>
                             </div>
                             <button class="text-gray-400 hover:text-blue-500">
@@ -129,14 +129,7 @@
                         </p>
 
                         <div class="flex justify-between items-center mt-auto">
-                            @if ($aspiration->status == 'selesai')
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Selesai</span>
-                            @elseif($aspiration->status == 'pending')
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">Dalam
-                                    Proses</span>
-                            @else
-                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Pending</span>
-                            @endif
+                            {!! $aspiration->status_badge !!}
 
                             <button class="text-blue-500 hover:text-blue-600">
                                 Selengkapnya <i class="fas fa-arrow-right ml-1"></i>
@@ -152,18 +145,8 @@
 
 
         <!-- Pagination -->
-        <div class="flex justify-center mt-8">
-            <nav class="flex gap-2">
-                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="px-3 py-1 border rounded-lg bg-blue-500 text-white">1</button>
-                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">2</button>
-                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">3</button>
-                <button class="px-3 py-1 border rounded-lg hover:bg-gray-50">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </nav>
+        <div class="mt-4">
+            {{ $aspirations->links() }}
         </div>
     </div>
 

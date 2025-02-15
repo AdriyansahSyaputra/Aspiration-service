@@ -70,39 +70,43 @@
                     <tbody class="divide-y divide-gray-200">
                         <!-- Sample Data -->
                         @foreach ($users as $user)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">{{ $loop->iteration }}</td>
-                            <td class="px-6 py-4 font-medium">{{ $user->name }}</td>
-                            <td class="px-6 py-4">{{ $user->email }}</td>
-                            <td class="px-6 py-4">{{ $user->aspirations_count }}</td>
-                            <td class="px-6 py-4">{{ $user->role }}</td>
-                            <td class="px-6 py-4">
-                                @if ($user->email_verified_at)
-                                <span
-                                    class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800">Terverifikasi</span>
-                                @else
-                                <span
-                                    class="px-2 py-1 text-sm rounded-full bg-red-100 text-red-800">Belum Terverifikasi</span>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4 relative">
-                                <button class="action-btn">
-                                    <i class="fas fa-ellipsis-v text-gray-500 hover:text-blue-500"></i>
-                                </button>
-                                <div
-                                    class="action-menu hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10">
-                                    <a href="{{ route('users.show', $user) }}" class="w-full block px-4 py-2 text-left hover:bg-gray-100">
-                                        <i class="fas fa-eye mr-2 text-blue-500"></i>Lihat Laporan
-                                    </a>
-                                    <button class="w-full px-4 py-2 text-left hover:bg-gray-100">
-                                        <i class="fas fa-edit mr-2 text-yellow-500"></i>Edit
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4">{{ $loop->iteration }}</td>
+                                <td class="px-6 py-4 font-medium">{{ $user->name }}</td>
+                                <td class="px-6 py-4">{{ $user->email }}</td>
+                                <td class="px-6 py-4">{{ $user->aspirations_count }}</td>
+                                <td class="px-6 py-4">{{ $user->role }}</td>
+                                <td class="px-6 py-4">
+                                    @if ($user->email_verified_at)
+                                        <span
+                                            class="px-2 py-1 text-sm rounded-full bg-green-100 text-green-800">Terverifikasi</span>
+                                    @else
+                                        <span class="px-2 py-1 text-sm rounded-full bg-red-100 text-red-800">Belum
+                                            Terverifikasi</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 relative">
+                                    <button class="action-btn">
+                                        <i class="fas fa-ellipsis-v text-gray-500 hover:text-blue-500"></i>
                                     </button>
-                                </div>
-                            </td>
-                        </tr>
+                                    <div
+                                        class="action-menu hidden absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-10">
+                                        <a href="{{ route('users.show', $user) }}"
+                                            class="w-full block px-4 py-2 text-left hover:bg-gray-100">
+                                            <i class="fas fa-eye mr-2 text-blue-500"></i>Lihat Laporan
+                                        </a>
+                                        <button class="w-full px-4 py-2 text-left hover:bg-gray-100">
+                                            <i class="fas fa-edit mr-2 text-yellow-500"></i>Edit
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
+            </div>
+            <div class="mt-4 px-6 py-4 border-t border-gray-200">
+                {{ $users->links() }}
             </div>
         </div>
     </div>

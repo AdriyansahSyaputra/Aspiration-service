@@ -9,7 +9,7 @@ class ExploreController extends Controller
 {
     public function index()
     {
-        $aspirations = Aspiration::latest()->get();
+        $aspirations = Aspiration::latest()->paginate(6);
 
         return view('explore.explore', [
             'title' => 'Jelajah',
@@ -23,10 +23,10 @@ class ExploreController extends Controller
         $aspirations = Aspiration::when($search, function ($query, $search) {
             $query->where('title', 'like', "%{$search}%")
                 ->orWhere('aspiration', 'like', "%{$search}%");
-        })->get();
+        })->paginate(6);
 
         return view('explore.explore', [
-            'title' => 'Hasil Pencarian',
+            'title' => 'Jelajah',
             'aspirations' => $aspirations,
         ]);
     }
@@ -39,7 +39,7 @@ class ExploreController extends Controller
 
         $aspirations = Aspiration::when($instituion, function ($query) use ($instituion) {
             return $query->where('institution', $instituion);
-        })->orderBy('created_at', $sort === 'terbaru' ? 'desc' : 'asc')->get();
+        })->orderBy('created_at', $sort === 'terbaru' ? 'desc' : 'asc')->paginate(6);
 
         return view('explore.explore', [
             'title' => 'Jelajah',

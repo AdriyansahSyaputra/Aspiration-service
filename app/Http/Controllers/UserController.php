@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('role', 'user')->withCount('aspirations')->get();
+        $users = User::where('role', 'user')->withCount('aspirations')->paginate(5);
         return view('dashboards.users.users', compact('users'));
     }
 
